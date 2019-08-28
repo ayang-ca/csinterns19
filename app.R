@@ -9,11 +9,11 @@ object_id = c(123, 456, 789)
 object_type = c('job', 'notebook', 'workflow')
 manager_id = c(111,222,333)
 manager_username = c('jdoe', 'jsmith', 'jsmith')
-managers_df = data.frame(object_id,object_type,manager_id,manager_username)
+#managers_df = data.frame(object_id,object_type,manager_id,manager_username)
 
 #a massive redshift table
-#my_table <- "selfserv_sharing.managers_shiny"
-#managers_df = read_civis(my_table, database="redshift-general")
+my_table <- "selfserv_sharing.managers_shiny"
+managers_df = read_civis(my_table, database="redshift-general") #if u only wanted select table for whats inputted change it here
 
 
 ui <- fluidPage(
@@ -26,7 +26,7 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
-  managers_df = read.csv('Downloads/manager_sample1.csv')
+  managers_df = managers_df
   tbl_filter = reactive({ managers_df %>% filter(object_id == input$idInput,
                                                  object_type==input$typeInput)
       })
