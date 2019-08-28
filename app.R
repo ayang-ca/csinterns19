@@ -9,7 +9,7 @@ ui <- fluidPage(
   titlePanel("Manager Finder"),
   sidebarLayout(numericInput("idInput", "Object ID", 0),
                 radioButtons("typeInput", "Object type",choices = c("'job'","'notebook'","'workflow'",
-                                                                    "'template'","'project'","'report'")
+                                                                    "'template'","'project'","'report','credential'")
                 )),
   mainPanel(tableOutput('managers'),width = 500)
 )
