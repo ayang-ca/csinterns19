@@ -2,7 +2,6 @@ install.packages('shiny')
 install.packages('civis')
 library(shiny)
 library(dplyr)
-library(DT)
 library(civis)
 
 #toy df
