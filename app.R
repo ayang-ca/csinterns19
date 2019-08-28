@@ -4,35 +4,25 @@ library(shiny)
 library(dplyr)
 library(civis)
 
-#toy df
-object_id = c(123, 456, 789)
-object_type = c('job', 'notebook', 'workflow')
-manager_id = c(111,222,333)
-manager_username = c('jdoe', 'jsmith', 'jsmith')
-#managers_df = data.frame(object_id,object_type,manager_id,manager_username)
-
-#a massive redshift table
-my_table <- "selfserv_sharing.managers_shiny"
-managers_df = read_civis(my_table, database="redshift-general") #if u only wanted select table for whats inputted change it here
-
 
 ui <- fluidPage(
   titlePanel("Manager Finder"),
-  sidebarLayout(numericInput("idInput", "Object ID", managers_df$object_id),
-                radioButtons("typeInput", "Object type",choices = c('job','notebook','workflow',
-                                                                    'template','project','report')
-                               )),
-    mainPanel(tableOutput('managers'),width = 500)
+  sidebarLayout(numericInput("idInput", "Object ID", 0),
+                radioButtons("typeInput", "Object type",choices = c("'job'","'notebook'","'workflow'",
+                                                                    "'template'","'project'","'report'")
+                )),
+  mainPanel(tableOutput('managers'),width = 500)
 )
 
 server <- function(input, output) {
-  managers_df = managers_df
-  tbl_filter = reactive({ managers_df %>% filter(object_id == input$idInput,
-                                                 object_type==input$typeInput)
-      })
-  output$managers = renderTable({tbl_filter()})
+  sqlInput = reactive({read_civis(sql(paste0('select * from selfserv_sharing.managers_shiny 
+                         where managers_shiny.object_id =',input$idInput,'
+                         and managers_shiny.object_type=',input$typeInput)), database = 'redshift-general')})
+  
+  output$managers = renderTable({sqlInput()})
 }
 
 shinyApp(ui = ui, server = server)
+
 
 
