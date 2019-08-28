@@ -22,6 +22,7 @@ server <- function(input, output) {
   output$managers = renderTable({sqlInput()})
 }
 
+options(shiny.sanitize.errors = TRUE)
 shinyApp(ui = ui, server = server)
 
 
